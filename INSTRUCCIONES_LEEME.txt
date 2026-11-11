@@ -1,0 +1,101 @@
+SISTEMA DE INVENTARIO Y VENTAS DE ROPA MATERNA
+VERSION 2.0 - PWA SIN CONEXION
+===============================================
+
+1. QUE INCLUYE
+- Panel comercial con indicadores.
+- Inventario por modelo + color + talla (cada variante tiene existencia propia).
+- Registro y edicion de prendas, precios y existencias.
+- Venta de una o varias prendas, con precio editable y descuento automatico de existencias.
+- Historial de ventas con fecha, hora y detalle.
+- Exportacion a archivos Excel reales (.xlsx), sin bibliotecas de Internet.
+- Respaldo completo (.json) y restauracion.
+- Compartir respaldo mediante las aplicaciones del celular, si lo permiten.
+- Almacenamiento local IndexedDB. No usa SQL Server ni Python como backend.
+
+2. ABRIR EN VISUAL STUDIO CODE (WINDOWS)
+A) Descomprime el ZIP.
+B) En VS Code: Archivo > Abrir carpeta > ROPA_MATERNA_PWA_V2.
+C) Abre una terminal en VS Code.
+D) Si tienes Python instalado, ejecuta:
+       py -m http.server 5500
+   Si 'py' no funciona, prueba:
+       python -m http.server 5500
+E) Abre Chrome en la misma computadora:
+       http://localhost:5500
+F) Registra una prenda y una venta. Refresca la pagina: los datos deben conservarse.
+G) Para detener el servidor local, presiona Ctrl+C en la terminal.
+
+IMPORTANTE: NO abras index.html con doble clic (file://). La PWA y el
+almacenamiento requieren un origen web adecuado. En localhost funciona.
+No es necesario instalar paquetes npm, Flask ni otras dependencias.
+
+3. PRUEBA SIN INTERNET EN LA COMPUTADORA
+- Visita http://localhost:5500 al menos una vez, deja que termine de cargar.
+- En Chrome, abre Herramientas para desarrolladores > Application > Service Workers
+  y confirma que el service worker esta activo.
+- Desconecta Internet (no hace falta apagar el servidor local) y recarga.
+- Comprueba que puedes agregar prendas, registrar ventas y exportar.
+- Puedes cerrar el servidor y recargar una vez que el service worker
+  haya guardado los archivos; la primera visita requiere un servidor.
+
+4. INSTALAR EN EL CELULAR ANDROID
+IMPORTANTE: http://192.168.x.x:5500 en una red Wi-Fi no suele ser un
+origen seguro para instalar PWA y activar service workers. NO prometemos
+que baste con conectarse a la IP de la computadora.
+
+Para instalarla correctamente en Android, los archivos estaticos deben
+servirse por HTTPS (por ejemplo, un alojamiento estatico de confianza),
+o por una configuracion de desarrollo con HTTPS valido.
+- Publicar los archivos de la aplicacion NO publica el inventario ni las
+  ventas: estos se guardan localmente en IndexedDB del telefono.
+- Evita incluir datos reales del negocio en los archivos que publiques.
+- Abre la URL HTTPS en Chrome Android, espera a que cargue y usa el menu
+  'Instalar aplicacion' o 'Agregar a pantalla principal', si aparece.
+- Abre la aplicacion una vez, espera a que se guarden los recursos y
+  comprueba el funcionamiento con el modo avion activado.
+- No borres los datos del sitio ni desinstales sin guardar un respaldo.
+
+5. EJEMPLO DE PRUEBA (DATOS FICTICIOS)
+- Modelo: Terciopelo Termico de Embarazo; color: Negro; talla: M;
+  existencia: 3; precio referencial: 85 Bs.
+- Crea una venta de 1 unidad a 80 Bs.
+- Comprueba que quedan 2 unidades y que la venta aparece en Historial.
+- Descarga los archivos Excel y abre el .xlsx en Excel.
+- Descarga un respaldo .json y guardalo en otra ubicacion.
+
+6. RESPALDOS Y CORREO
+- 'Exportar y respaldar' > 'Descargar respaldo' genera un archivo JSON
+  con inventario, ventas y movimientos.
+- 'Restaurar respaldo' REEMPLAZA los datos actuales. Antes de hacerlo,
+  crea una copia de los registros actuales.
+- Para enviar registros por correo, descarga el Excel o el JSON y
+  adjuntalo en Gmail. La funcion Compartir intenta abrir el menu de
+  Android. Enviar correo SI requiere Internet.
+- Los Excel son para consulta. Para restaurar TODO utiliza JSON.
+- Recomendacion: hacer un respaldo al finalizar cada jornada y guardar
+  una copia fuera del celular.
+
+7. LIMITACIONES DE ESTA VERSION
+- Uso de un solo dispositivo; NO sincroniza entre varios telefonos.
+- No tiene cuentas ni inicio de sesion: protege el acceso fisico al movil.
+- No emite facturas, no calcula ganancias ni registra clientes.
+- No incluye anulacion de ventas: ante un error, documentar la correccion
+  y ajustar las existencias manualmente; esta mejora puede incorporarse.
+- La fecha y hora dependen del reloj del dispositivo.
+- El almacenamiento del navegador puede borrarse por limpieza de datos,
+  restablecimiento o perdida del telefono.
+- La instalacion Android requiere una URL HTTPS confiable; VS Code por
+  si solo no instala una PWA offline en Android.
+
+8. ESTRUCTURA DEL PROYECTO
+index.html             Interfaz principal
+styles.css             Estilo comercial adaptable a celulares
+js/db.js               Base IndexedDB, validacion, ventas y respaldos
+js/app.js              Pantallas y funciones
+js/xlsx.js             Generador Excel .xlsx sin dependencias
+sw.js                  Cache para uso sin conexion
+manifest.webmanifest   Configuracion de instalacion PWA
+assets/                Iconos de la aplicacion
+
+PROYECTO ACADEMICO - TECNICAS DE INVESTIGACION - GESTION 2026
